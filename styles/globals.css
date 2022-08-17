@@ -1,26 +1,27 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@font-face {
+  font-family: Gramatika;
+  src: url(/fonts/GramatikaBold.woff);
 }
 
-a {
-  color: inherit;
+html, body, h1, a {
+  padding: 0;
+  margin: 0;
+  font-family: Gramatika;
+  font-size: 2vw;
+  color: #da3832;
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+p {
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+  text-transform: uppercase;
 }
