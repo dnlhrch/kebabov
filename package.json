@@ -15,6 +15,7 @@
     "react-dom": "18.2.0",
     "react-lottie": "^1.2.3",
     "react-lottie-segments": "^1.4.9",
+    "react-svg-cursor": "^2.5.0",
     "styled-components": "^5.3.5"
   },
   "devDependencies": {

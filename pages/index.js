@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import Lottie from "react-lottie-segments";
 import animationData from "../public/json/doner_hand.json";
-import About from "./about.js";
+import About from "../components/about.js";
 
 export default function Main() {
   const [gray, setGray] = useState(false);
@@ -11,12 +11,27 @@ export default function Main() {
     segments: [0, 0],
     forceFlag: true,
   });
+  const [mouseOver, setMouseOver] = useState(false);
+  const cursorRef = useRef(null);
+
+  React.useEffect(() => {
+    const handleMouseMove = (e) => {
+      cursorRef.current.style = `top: ${e.clientY}px; left: ${e.clientX}px;`;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [cursorRef]);
+
   const handStyle = {
     width: "unset",
     height: "80%",
     position: "absolute",
-    "pointer-events": "none",
-    "z-index": "2",
+    pointerEvents: "none",
+    zIndex: "2",
   };
   const handAnimation = {
     loop: false,
@@ -32,13 +47,26 @@ export default function Main() {
       forceFlag: true,
     });
   };
-  const openAbout = () => {
-    setGray(current => !current);
-    setShowAbout(current => !current);
+  const toggleAbout = () => {
+    setGray(!gray);
+    setShowAbout(!showAbout);
+  };
+
+  const handleMouse = {
+    onMouseEnter: () => setMouseOver(true),
+    onMouseLeave: () => setMouseOver(false),
   };
 
   return (
     <div>
+      <Cursor
+        ref={cursorRef}
+        src={
+          !mouseOver
+            ? "/imgs/doner_cursor-default.svg"
+            : "/imgs/doner_cursor-pointer.svg"
+        }
+      />
       <Kebabov
         style={{
           filter: gray ? "saturate(0%) brightness(150%)" : "",
@@ -50,18 +78,27 @@ export default function Main() {
           isClickToPauseDisabled={true}
           playSegments={sequence}
         />
-        <ShavaWrapper onClick={() => animate()}>
+        <ShavaWrapper {...handleMouse} onClick={() => animate()}>
           <Shava src={`/imgs/doner_1.gif`} />
         </ShavaWrapper>
         <Bg src={`/imgs/doner_bg.svg`} />
-        <AboutButtonWrapper onClick={openAbout}>
-          <AboutButton src={`/imgs/doner_about.svg`} />
-        </AboutButtonWrapper>
+        <AboutButton {...handleMouse} onClick={toggleAbout}>
+          <AboutImg src={`/imgs/doner_about.svg`} />
+        </AboutButton>
       </Kebabov>
-      {showAbout ? <About /> : null}
+      {showAbout ? <About handleMouse={handleMouse} close={toggleAbout} /> : null}
     </div>
   );
 }
+
+const Cursor = styled.img`
+  width: 7vw;
+  height: 7vw;
+  position: absolute;
+  z-index: 999;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+`;
 
 const Kebabov = styled.div`
   position: absolute;
@@ -79,6 +116,7 @@ const ShavaWrapper = styled.div`
   bottom: 0;
   margin: auto 0 auto 10%;
   z-index: 1;
+  user-select: none;
   cursor: default;
   &:hover {
     cursor: pointer;
@@ -93,17 +131,19 @@ const Bg = styled.img`
   height: 80%;
   position: relative;
   z-index: 0;
+  user-select: none;
 `;
 
-const AboutButtonWrapper = styled.div`
+const AboutButton = styled.button`
   height: 12.35%;
   position: relative;
-  cursor: default;
-  &:hover {
-    cursor: pointer;
-  }
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  user-select: none;
 `;
 
-const AboutButton = styled.img`
+const AboutImg = styled.img`
   height: 100%;
 `;
